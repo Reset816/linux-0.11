@@ -238,8 +238,8 @@ static void del(void)
 
 static void csi_J(int par)
 {
-	long count __asm__("cx");
-	long start __asm__("di");
+	long count;
+	long start;
 
 	switch (par) {
 		case 0:	/* erase from cursor to end of display */
@@ -267,8 +267,8 @@ static void csi_J(int par)
 
 static void csi_K(int par)
 {
-	long count __asm__("cx");
-	long start __asm__("di");
+	long count;
+	long start;
 
 	switch (par) {
 		case 0:	/* erase from cursor to end of line */
