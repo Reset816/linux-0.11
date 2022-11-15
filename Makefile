@@ -37,7 +37,12 @@ LIBS	=lib/lib.a
 all:	Image
 
 Image: boot/bootsect boot/setup tools/system tools/build
-	tools/build boot/bootsect boot/setup tools/system $(ROOT_DEV) > Image
+	cp -f tools/system system.tmp
+	strip system.tmp
+	objcopy -O binary -R .note -R .comment system.tmp tools/kernel
+	tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV) > Image
+	rm system.tmp
+	rm tools/kernel -f
 	sync
 
 disk: Image
@@ -57,6 +62,7 @@ tools/system:	boot/head.o init/main.o \
 	$(MATH) \
 	$(LIBS) \
 	-o tools/system > System.map
+	nm tools/system | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aU] \)\|\(\.\.ng$$\)\|\(LASH[RL]DI\)'| sort > System.map
 
 kernel/math/math.a:
 	(cd kernel/math; make)
